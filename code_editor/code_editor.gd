@@ -9,6 +9,7 @@ var debug_output = []
 onready var debug = $HSplitContainer/VSplitContainer/Output
 onready var tab_container = $HSplitContainer/VSplitContainer/TabContainer
 onready var file_system = $HSplitContainer/FileSystem
+onready var lsp = $LSP
 
 
 func _ready() -> void:

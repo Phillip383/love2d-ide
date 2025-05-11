@@ -21,6 +21,7 @@ func connect_to_lsp(ip: String, port: int):
 		print("Failed to connect:", err)
 
 func send_initialize_request():
+	#TODO: update the rootUri to the path of the love project.
 	var request = {
 		"jsonrpc": "2.0",
 		"id": 1,
@@ -38,15 +39,15 @@ func send_json(data):
 	client.put_data((json_string + "\n").to_utf8_buffer())
 	
 
-func send_hover_request():
+func send_hover_request(path_to_script: String, position: Vector2):
 	# TODO: change this to use the current open file and cursor position...
 	var request = {
   "jsonrpc": "2.0",
   "id": 2,
   "method": "textDocument/hover",
   "params": {
-	"textDocument": { "uri": "file:///path/to/script.lua" },
-	"position": { "line": 5, "character": 10 }
+	"textDocument": { "uri": path_to_script },
+	"position": { "line": position.x, "character": position.y }
   }
 }
 	send_json(request)

@@ -117,7 +117,7 @@ or has been moved to somewhere else.
 Please close this tab and open it again
 once you found it."
 
-[node name="Node" type="Node" parent="."]
+[node name="LSP" type="Node" parent="."]
 script = ExtResource( 5 )
 
 [connection signal="pressed" from="ColorRect/RefreshButton" to="." method="_on_RefreshButton_pressed"]
