@@ -37,6 +37,9 @@ func _ready() -> void:
 	$HelpMenu.get_popup().add_item("Love2D Forum")
 	$HelpMenu.get_popup().add_item("About Creator")
 	$HelpMenu.get_popup().connect("id_pressed", self, "_on_help_item_pressed")
+	
+	#LSP setup
+	lsp.send_initialize_request(project_path)
 
 
 func set_shortcut(key):

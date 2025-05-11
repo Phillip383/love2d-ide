@@ -20,23 +20,22 @@ func connect_to_lsp(ip: String, port: int):
 	else:
 		print("Failed to connect:", err)
 
-func send_initialize_request():
-	#TODO: update the rootUri to the path of the love project.
+func send_initialize_request(project_root: String):
 	var request = {
 		"jsonrpc": "2.0",
 		"id": 1,
 		"method": "initialize",
 		"params": {
 			"processId": 1234,
-			"rootUri": "file:///path/to/project",
+			"rootUri": project_root,
 			"capabilities": {}
 		}
 	}
 	send_json(request)
 	
 func send_json(data):
-	var json_string = JSON.stringify(data)
-	client.put_data((json_string + "\n").to_utf8_buffer())
+	var json_string = JSON.print(data)
+	client.put_data((json_string + "\n").to_utf8())
 	
 
 func send_hover_request(path_to_script: String, position: Vector2):
