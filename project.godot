@@ -35,6 +35,10 @@ Global="*res://Global.gd"
 
 common/drop_mouse_on_gui_input_disabled=true
 
+[mono]
+
+project/assembly_name="Love 2d Ide"
+
 [physics]
 
 common/enable_pause_aware_picking=true
