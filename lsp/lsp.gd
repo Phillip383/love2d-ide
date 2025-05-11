@@ -1,16 +1,16 @@
 extends Node
 
 var client := StreamPeerTCP.new()
-
+var lsp_pid = 0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Start the LSP
 	#TODO: change this to a path configured by the application...
-	var pid = OS.execute("D:\\dev\\tooling\\lua-lsp\\bin\\lua-language-server.exe", ["--socket=5050"], false)
-	if pid == -1:
+	lsp_pid = OS.execute("D:\\dev\\tooling\\lua-lsp\\bin\\lua-language-server.exe", ["--socket=5050"], false)
+	if lsp_pid == -1:
 		print("LSP failed to Execute")
 	else:
-		print("LSP running pid ", pid)
+		print("LSP running pid ", lsp_pid)
 		connect_to_lsp("127.0.0.1", 5050)
 
 func connect_to_lsp(ip: String, port: int):
@@ -51,9 +51,16 @@ func send_hover_request():
 }
 	send_json(request)
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if client.get_available_bytes() > 0:
 		var response = client.get_string(client.get_available_bytes())
 		print("LSP Respone:", response)
+
+func _notification(what):
+	if what == NOTIFICATION_CRASH:
+		print("Killing LSP")
+		OS.kill(lsp_pid)
+	if what == NOTIFICATION_WM_QUIT_REQUEST:
+		print("Killing LSP")
+		OS.kill(lsp_pid)
