@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://code_editor/FileSystem.gd" type="Script" id=1]
 [ext_resource path="res://theme/love2d/love2d.tres" type="Theme" id=2]
 [ext_resource path="res://code_editor/code_editor.gd" type="Script" id=3]
 [ext_resource path="res://play-icon.png" type="Texture" id=4]
+[ext_resource path="res://lsp/lsp.gd" type="Script" id=5]
 
 [node name="CodeEditor" type="Control"]
 anchor_right = 1.0
@@ -115,6 +116,9 @@ or has been moved to somewhere else.
 
 Please close this tab and open it again
 once you found it."
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource( 5 )
 
 [connection signal="pressed" from="ColorRect/RefreshButton" to="." method="_on_RefreshButton_pressed"]
 [connection signal="pressed" from="ColorRect/CloseTabButton" to="." method="_on_CloseTabButton_pressed"]
