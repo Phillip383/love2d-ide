@@ -31,6 +31,10 @@ config/windows_native_icon="res://Love IDE (icon).ico"
 
 Global="*res://Global.gd"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/Todo_Manager/plugin.cfg" )
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true

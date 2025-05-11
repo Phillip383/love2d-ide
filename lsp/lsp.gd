@@ -36,6 +36,21 @@ func send_initialize_request():
 func send_json(data):
 	var json_string = JSON.stringify(data)
 	client.put_data((json_string + "\n").to_utf8_buffer())
+	
+
+func send_hover_request():
+	# TODO: change this to use the current open file and cursor position...
+	var request = {
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "textDocument/hover",
+  "params": {
+	"textDocument": { "uri": "file:///path/to/script.lua" },
+	"position": { "line": 5, "character": 10 }
+  }
+}
+	send_json(request)
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
