@@ -4,10 +4,10 @@ class_name SaveData
 
 const PATH = "user://save"
 
-export var project_list: Resource
+@export var project_list: Resource
 
 func save_data():
-	ResourceSaver.save(get_save_path(), self)
+	ResourceSaver.save(self, get_save_path())
 	
 
 static func save_exists():
@@ -17,10 +17,10 @@ static func save_exists():
 static func load_data():
 	var save_path = get_save_path()
 	if not ResourceLoader.has_cached(save_path):
-		return ResourceLoader.load(save_path, "", true)
+		return ResourceLoader.load(save_path, "", ResourceLoader.CACHE_MODE_IGNORE)
 		
-	var f = File.new()
-	if f.open(save_path, File.File.READ) != OK:
+	var f = FileAccess.open(save_path, FileAccess.READ)
+	if f != OK:
 		print("Cannot read file")
 		return null
 
@@ -31,18 +31,20 @@ static func load_data():
 	var tmp_file_path = make_random_path()
 	while ResourceLoader.has_cached(tmp_file_path):
 		tmp_file_path = make_random_path()
-		
-	if f.open(tmp_file_path, File.WRITE) != OK:
+	f = FileAccess.open(tmp_file_path, FileAccess.WRITE)
+	if f != OK:
 		print("Cannot write file")
 		return null
 		
 	f.store_string(data)
 	f.close()
 	
-	var save = ResourceLoader.load(tmp_file_path, "", true)
+	var save = ResourceLoader.load(tmp_file_path, "", ResourceLoader.CACHE_MODE_IGNORE)
 	save.take_over_path(save_path)
 	
-	var directory = Directory.new()
+	#FIXME: Any errors with removing temp paths for saves, Look here
+	# I wasnt sure what directory to open due to api changes.
+	var directory = DirAccess.open(tmp_file_path)
 	directory.remove(tmp_file_path)
 	return save
 	

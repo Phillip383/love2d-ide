@@ -6,15 +6,15 @@ var current_file_path
 var project_path = Global.project_path
 var debug_output = []
 
-onready var debug = $HSplitContainer/VSplitContainer/Output
-onready var tab_container = $HSplitContainer/VSplitContainer/TabContainer
-onready var file_system = $HSplitContainer/FileSystem
-onready var lsp = $LSP
+@onready var debug = $HSplitContainer/VSplitContainer/Output
+@onready var tab_container = $HSplitContainer/VSplitContainer/TabContainer
+@onready var file_system = $HSplitContainer/FileSystem
+@onready var lsp = $LSP
 
 
 func _ready() -> void:
 	$SaveFileDialog.current_dir = Global.project_path
-	$SaveFileDialog.set_filters(PoolStringArray(["*.lua; Lua script"]))
+	$SaveFileDialog.set_filters(PackedStringArray(["*.lua; Lua script"]))
 	$SaveFileDialog.current_file = "Untitled.lua"
 	
 	file_system.project_path = project_path
@@ -25,7 +25,7 @@ func _ready() -> void:
 	$MenuButton.get_popup().add_item("Save")
 	$MenuButton.get_popup().add_item("Open Folder")
 	$MenuButton.get_popup().add_item("Quit")
-	$MenuButton.get_popup().connect("id_pressed", self, "_on_item_pressed")
+	$MenuButton.get_popup().connect("id_pressed", Callable(self, "_on_item_pressed"))
 
 	$MenuButton.get_popup().set_item_shortcut(0, set_shortcut(KEY_N))
 	$MenuButton.get_popup().set_item_shortcut(1, set_shortcut(KEY_E))
@@ -36,16 +36,16 @@ func _ready() -> void:
 	$HelpMenu.get_popup().add_item("Love2D API")
 	$HelpMenu.get_popup().add_item("Love2D Forum")
 	$HelpMenu.get_popup().add_item("About Creator")
-	$HelpMenu.get_popup().connect("id_pressed", self, "_on_help_item_pressed")
+	$HelpMenu.get_popup().connect("id_pressed", Callable(self, "_on_help_item_pressed"))
 	
 	#LSP setup
 	lsp.send_initialize_request(project_path)
 
 
 func set_shortcut(key):
-	var shortcut = ShortCut.new()
+	var shortcut = Shortcut.new()
 	var inputeventkey = InputEventKey.new()
-	inputeventkey.set_scancode(key)
+	inputeventkey.set_keycode(key)
 	inputeventkey.control = true
 	shortcut.set_shortcut(inputeventkey)
 	return shortcut
@@ -65,7 +65,7 @@ func toggle_closetab_button():
 
 
 func update_window_title(suffix : String):
-	OS.set_window_title(app_name + " - " + current_file + suffix)
+	get_window().set_title(app_name + " - " + current_file + suffix)
 	if tab_container.get_child_count() != 0:
 		tab_container.get_child(tab_container.current_tab).name = current_file.get_basename() + suffix
 
@@ -109,13 +109,13 @@ func _on_FileSystem_file_changed(file, path) -> void:
 
 func new_file():
 	current_file = "Untitled"
-	var new_tab = preload("res://code_editor/CodeEdit.tscn").instance()
+	var new_tab = preload("res://code_editor/CodeEdit.tscn").instantiate()
 	tab_container.add_child(new_tab)
 	tab_container.current_tab = tab_container.get_child_count() - 1
 	
 	update_window_title("")
 	tab_container.get_child(tab_container.current_tab).text = ""
-	tab_container.get_child(tab_container.current_tab).connect("text_changed", self, "_on_CodeEdit_text_changed")
+	tab_container.get_child(tab_container.current_tab).connect("text_changed", Callable(self, "_on_CodeEdit_text_changed"))
 	
 
 func save_file():
@@ -124,9 +124,8 @@ func save_file():
 		if file_name == "Untitled":
 			$SaveFileDialog.popup()
 		else:
-			var f = File.new()
-			if f.file_exists(current_file_path):
-				f.open(current_file_path, 2)
+			if FileAccess.file_exists(current_file_path):
+				var f = FileAccess.open(current_file_path, FileAccess.WRITE)
 				f.store_string(tab_container.get_child(tab_container.current_tab).text)
 				f.close()
 				update_window_title("")
@@ -139,8 +138,8 @@ func save_file():
 
 func _on_CodeEdit_text_changed() -> void:
 	update_window_title(" (*)")
-	var x = tab_container.get_child(tab_container.current_tab).cursor_get_line()
-	var y = tab_container.get_child(tab_container.current_tab).cursor_get_column()
+	var x = tab_container.get_child(tab_container.current_tab).get_caret_line()
+	var y = tab_container.get_child(tab_container.current_tab).get_caret_column()
 	lsp.send_completion_request(current_file_path, Vector2(x + 1, y))
 
 func _on_tab_closed(tab):
@@ -169,13 +168,13 @@ func existing_tab(tab_path) -> int:
 func _on_FileSystem_item_activated() -> void:
 	var path = file_system.get_selected().get_meta("path")
 	if path:
-		var f = File.new()
+		#FIXME: if I have write issues this could be the culprite...
+		var f = FileAccess.open(path, FileAccess.READ)
 		var file_name = file_system.get_selected().get_meta("name")
-		f.open(path, 1)
 		if (tab_container.get_child_count() == 0) or (tab_container.get_children()[tab_container.current_tab].name.ends_with("(*)")):
 			# Create a new tab if there aren't any existing tab
 			if existing_tab(path) == -1:
-				var new_tab = preload("res://code_editor/CodeEdit.tscn").instance()
+				var new_tab = preload("res://code_editor/CodeEdit.tscn").instantiate()
 				tab_container.add_child(new_tab)
 				tab_container.current_tab = tab_container.get_child_count() - 1
 			
@@ -187,7 +186,7 @@ func _on_FileSystem_item_activated() -> void:
 		tab_container.get_children()[tab_container.current_tab].set_meta("path", path)
 		tab_container.get_child(tab_container.current_tab).set_meta("name", file_name)
 		tab_container.get_children()[tab_container.current_tab].text = f.get_as_text()
-		tab_container.get_child(tab_container.current_tab).connect("text_changed", self, "_on_CodeEdit_text_changed")
+		tab_container.get_child(tab_container.current_tab).connect("text_changed", Callable(self, "_on_CodeEdit_text_changed"))
 		current_file_path = path
 		current_file = file_name
 		f.close()
@@ -196,8 +195,7 @@ func _on_FileSystem_item_activated() -> void:
 
 
 func _on_SaveFileDialog_file_selected(path: String) -> void:
-	var f = File.new()
-	f.open(path, 2)
+	var f = FileAccess.open(path, FileAccess.WRITE)
 	f.store_string(tab_container.get_children()[tab_container.current_tab].text)
 	tab_container.get_child(tab_container.current_tab).name = path.get_file().get_basename()
 	tab_container.get_child(tab_container.current_tab).set_meta("path", path)
@@ -214,13 +212,13 @@ func _on_PlaySceneButton_pressed() -> void:
 	# TODO: Remember to move the love folder to the export
 	if OS.get_name() == "Windows":	
 		var love_directory = str(OS.get_executable_path().get_base_dir()) + "/love/love.exe"
-		OS.execute("cmd.exe",["/C",love_directory, Global.project_path], true, debug_output, true)
+		OS.execute("cmd.exe",["/C",love_directory, Global.project_path], debug_output,  true, true)
 	elif OS.get_name() == "OSX":
 		var love_directory = str(OS.get_executable_path().get_base_dir()) + "/love-macos/love.app/Contents/MacOS/love"
-		OS.execute(love_directory, [Global.project_path], true, debug_output)
+		OS.execute(love_directory, [Global.project_path], debug_output,  true)
 	elif OS.get_name() == "X11":
 		var love_directory = str(OS.get_executable_path().get_base_dir()) + "/love.AppImage"
-		OS.execute(love_directory,[Global.project_path], true, debug_output)
+		OS.execute(love_directory,[Global.project_path], debug_output, true)
 	
 	
 	for i in debug_output:
@@ -230,17 +228,17 @@ func _on_PlaySceneButton_pressed() -> void:
 # Export
 func build():
 	if OS.get_name() == "Windows":
-		OS.execute("cmd.exe",["/C", OS.get_executable_path().get_base_dir() + "/love/boon.exe", "init"], true, debug_output, true)
-		OS.execute("cmd.exe", ["/C", OS.get_executable_path().get_base_dir() + "/love/boon.exe", "love","download", "11.3"], true, debug_output, true)
-		OS.execute("cmd.exe", ["/C", OS.get_executable_path().get_base_dir() + "/love/boon.exe", "build", Global.project_path, "--target", "all"], true, debug_output, true)
+		OS.execute("cmd.exe",["/C", OS.get_executable_path().get_base_dir() + "/love/boon.exe", "init"], debug_output, true, true)
+		OS.execute("cmd.exe", ["/C", OS.get_executable_path().get_base_dir() + "/love/boon.exe", "love","download", "11.3"],debug_output, true, true)
+		OS.execute("cmd.exe", ["/C", OS.get_executable_path().get_base_dir() + "/love/boon.exe", "build", Global.project_path, "--target", "all"],debug_output, true, true)
 	elif OS.get_name() == "OSX":
-		OS.execute(OS.get_executable_path().get_base_dir() + "/love-macos/boon", ["init"], true, debug_output)
-		OS.execute(OS.get_executable_path().get_base_dir() + "/love-macos/boon", ["love", "download", "11.3"], true, debug_output)
-		OS.execute(OS.get_executable_path().get_base_dir() + "/love-macos/boon", ["build", Global.project_path, "--target", "all"], true, debug_output)
+		OS.execute(OS.get_executable_path().get_base_dir() + "/love-macos/boon", ["init"],  debug_output, true)
+		OS.execute(OS.get_executable_path().get_base_dir() + "/love-macos/boon", ["love", "download", "11.3"], debug_output, true)
+		OS.execute(OS.get_executable_path().get_base_dir() + "/love-macos/boon", ["build", Global.project_path, "--target", "all"], debug_output, true)
 	elif OS.get_name() == "X11":
-		OS.execute(OS.get_executable_path().get_base_dir() + "/boon", ["init"], true, debug_output)
-		OS.execute(OS.get_executable_path().get_base_dir() + "/boon", ["love", "download", "11.3"], true, debug_output)
-		OS.execute(OS.get_executable_path().get_base_dir() + "/boon", ["build", Global.project_path, "--target", "all"], true, debug_output)
+		OS.execute(OS.get_executable_path().get_base_dir() + "/boon", ["init"],debug_output, true)
+		OS.execute(OS.get_executable_path().get_base_dir() + "/boon", ["love", "download", "11.3"],debug_output, true)
+		OS.execute(OS.get_executable_path().get_base_dir() + "/boon", ["build", Global.project_path, "--target", "all"],debug_output, true)
 	
 	
 	for i in debug_output:
@@ -250,9 +248,9 @@ func build():
 
 
 func move_dll_and_love():
-	var dir = Directory.new()
-	if dir.open(OS.get_executable_path().get_base_dir() + "/love") == OK:
-		dir.list_dir_begin(true, true)
+	var dir = DirAccess.open(OS.get_executable_path().get_base_dir() + "/love")
+	if dir == OK:
+		dir.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 		dir.copy(OS.get_executable_path().get_base_dir() + "/love/love.exe", Global.project_path + "/builds/" + "love.exe")
 		var file_name = dir.get_next()
 		while (file_name != "" && file_name != "." && file_name != ".."):

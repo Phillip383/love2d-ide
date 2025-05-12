@@ -91,23 +91,24 @@ var current_line
 var last_line_length
 var last_line
 
-onready var lsp = $LSP
+@onready var lsp = $LSP
+@onready var code_highlighter = CodeHighlighter.new()
 
 func _ready() -> void:
 	for i in lua_reserved_keyword:
-		add_keyword_color(i, Color(0.269531, 0.589111, 1))
+		code_highlighter.add_keyword_color(i, Color(0.269531, 0.589111, 1))
 		
 	for love in love_keyword:
-		add_keyword_color(love, Color(1, 0.136719, 0.622314))
+		code_highlighter.add_keyword_color(love, Color(1, 0.136719, 0.622314))
 	
 	
-	add_color_region('"', '"', Color(1, 0.942413, 0.566406))
-	add_color_region("'", "'", Color(1, 0.942413, 0.566406))
-	add_color_region("--", "", Color(0.347656, 0.347656, 0.347656))
+	code_highlighter.add_color_region('"', '"', Color(1, 0.942413, 0.566406))
+	code_highlighter.add_color_region("'", "'", Color(1, 0.942413, 0.566406))
+	code_highlighter.add_color_region("--", "", Color(0.347656, 0.347656, 0.347656))
 	
 	
-	current_line_length = get_line_width(cursor_get_line())
-	current_line = cursor_get_line()
+	current_line_length = get_line_width(get_caret_line())
+	current_line = get_caret_line()
 	
 	last_line_length = current_line_length
 	last_line = current_line
@@ -115,15 +116,15 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	current_line_length = get_line_width(cursor_get_line())
-	current_line = cursor_get_line()
+	current_line_length = get_line_width(get_caret_line())
+	current_line = get_caret_line()
 	
-	current_line_length = get_line_width(cursor_get_line())
+	current_line_length = get_line_width(get_caret_line())
 	
 	# If the text change and it's not delete word then
 	if (current_line_length > last_line_length) and (last_line == current_line):
 		add_pairs()
-		current_line_length = get_line_width(cursor_get_line())
+		current_line_length = get_line_width(get_caret_line())
 		
 	
 	last_line_length = current_line_length
@@ -140,31 +141,31 @@ func _on_CodeEdit_text_changed() -> void:
 	
 	
 func add_pairs():
-	var cursor_pos = Vector2(cursor_get_line(), cursor_get_column())
+	var cursor_pos = Vector2(get_caret_line(), get_caret_column())
 	select(cursor_pos.x, cursor_pos.y - 1, cursor_pos.x, cursor_pos.y)
-	var character = get_selection_text()
+	var character = get_selected_text()
 	match character:
 		"(":
 			deselect()
-			insert_text_at_cursor(")")
+			insert_text_at_caret(")")
 			
 		"[":
 			deselect()
-			insert_text_at_cursor("]")
+			insert_text_at_caret("]")
 			
 		"{":
 			deselect()
-			insert_text_at_cursor("}")
+			insert_text_at_caret("}")
 			
 		"'":
 			deselect()
-			insert_text_at_cursor("'")
+			insert_text_at_caret("'")
 			
 		'"':
 			deselect()
-			insert_text_at_cursor('"')
+			insert_text_at_caret('"')
 			
-	cursor_set_column(cursor_pos.y)
+	set_caret_column(cursor_pos.y)
 	deselect()
 
 

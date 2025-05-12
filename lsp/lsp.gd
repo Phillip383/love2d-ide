@@ -2,21 +2,22 @@ extends Node
 
 var client := StreamPeerTCP.new()
 var lsp_pid = 0
+var debug_output = []
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Start the LSP
 	#TODO: change this to a path configured by the application...
-	lsp_pid = OS.execute("D:\\dev\\tooling\\lua-lsp\\bin\\lua-language-server.exe", ["--socket=5050"], false)
+	connect_to_lsp("127.0.0.1", 8080)
+	lsp_pid = OS.execute("D:\\dev\\tooling\\lua-lsp\\bin\\lua-language-server.exe", ["--stdio", "--log=debug"], debug_output, false)
 	if lsp_pid == -1:
 		print("LSP failed to Execute")
 	else:
 		print("LSP running pid ", lsp_pid)
-		connect_to_lsp("127.0.0.1", 5050)
 
 func connect_to_lsp(ip: String, port: int):
 	var err = client.connect_to_host(ip, port)
 	if err == OK:
-		print("Connected to Lua LSP Server!")
+		print("Connected to Host!")
 	else:
 		print("Failed to connect:", err)
 
@@ -34,8 +35,8 @@ func send_initialize_request(project_root: String):
 	send_json(request)
 	
 func send_json(data):
-	var json_string = JSON.print(data)
-	client.put_data((json_string + "\n").to_utf8())
+	var json_string = JSON.stringify(data)
+	client.put_data((json_string + "\n").to_utf8_buffer())
 	
 
 func send_completion_request(current_doc_path: String, position: Vector2):
@@ -77,6 +78,6 @@ func _notification(what):
 	if what == NOTIFICATION_CRASH:
 		print("Killing LSP")
 		OS.kill(lsp_pid)
-	if what == NOTIFICATION_WM_QUIT_REQUEST:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		print("Killing LSP")
 		OS.kill(lsp_pid)

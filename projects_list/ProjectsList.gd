@@ -6,7 +6,7 @@ var projects_list = []
 var project_selected
 
 
-signal change_scene(project_name, path)
+signal change_scene_to_file(project_name, path)
 
 func _ready() -> void:
 	load_data()
@@ -14,27 +14,28 @@ func _ready() -> void:
 
 
 func save_data():
-	var f = File.new()
-	f.open(PATH, File.WRITE)
-	f.store_line(to_json(projects_list))
+	var f = FileAccess.open(PATH, FileAccess.WRITE)
+	f.store_line(JSON.stringify(projects_list))
 	f.close()
 	
 	
 func load_data():
-	var f = File.new()
-	if not f.file_exists(PATH):
+	if not FileAccess.file_exists(PATH):
 		save_data()
 		return
 	
-	projects_list.empty()
-	f.open(PATH, File.READ)
-	projects_list = parse_json(f.get_as_text())
+	var f = FileAccess.open(PATH, FileAccess.READ)
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(f.get_as_text())
+	projects_list = test_json_conv.get_data()
 	f.close()
 	
-	var dir = Directory.new()
-	for i in range(projects_list.size(), 0, -1):
-		if not dir.dir_exists(projects_list[i-1]["path"]):
-			projects_list.remove(i-1)
+	#FIXME: any issues with removing projects from the project list, this is probably the culprite.
+	var dir = DirAccess.open(PATH)
+	if dir != null:
+		for i in range(projects_list.size(), 0, -1):
+			if not dir.dir_exists(projects_list[i-1]["path"]):
+				projects_list.remove(i-1)
 	
 	save_data()
 	
@@ -55,7 +56,7 @@ func _on_ChoosePathButton_pressed() -> void:
 	
 
 func _on_NewProjectDialog_dir_selected(dir: String) -> void:
-	$AcceptDialog/GridContainer/Path.text = dir
+	$AcceptDialog/GridContainer/Path3D.text = dir
 	if not check_blank_folder(dir):
 		$AcceptDialog/VBoxContainer/Warning3.show()
 	else:
@@ -68,20 +69,20 @@ func _on_CreateProjectButton_pressed() -> void:
 	else:
 		$AcceptDialog/VBoxContainer/Warning1.hide()
 		
-	if $AcceptDialog/GridContainer/Path.text == "":
+	if $AcceptDialog/GridContainer/Path3D.text == "":
 		$AcceptDialog/VBoxContainer/Warning2.show()
 	else:
 		$AcceptDialog/VBoxContainer/Warning2.hide()
-		add_project($AcceptDialog/GridContainer/ProjectName.text, $AcceptDialog/GridContainer/Path.text)
+		add_project($AcceptDialog/GridContainer/ProjectName.text, $AcceptDialog/GridContainer/Path3D.text)
 		$AcceptDialog.hide()
 #		$AcceptDialog/VBoxContainer/Warning3.hide()
 
 
 func check_blank_folder(path):
 	print(path)
-	var dir = Directory.new()
-	if dir.open(path) == OK:
-		dir.list_dir_begin(true, true)
+	var dir = DirAccess.open(path)
+	if dir == OK:
+		dir.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 		var file_name = dir.get_next()
 		if file_name != "":
 			print(file_name)
@@ -114,7 +115,7 @@ func _on_OpenProject_ChoosePathButton_pressed() -> void:
 
 
 func _on_OpenProjectDialog_file_selected(path: String) -> void:
-	$OpenProjectWindow/GridContainer/Path.text = path.get_base_dir()
+	$OpenProjectWindow/GridContainer/Path3D.text = path.get_base_dir()
 	$OpenProjectWindow/VBoxContainer/Warning3.hide()
 
 
@@ -124,11 +125,11 @@ func _on_Confirm_OpenProjectButton_pressed() -> void:
 	else:
 		$OpenProjectWindow/VBoxContainer/Warning1.hide()
 		
-	if $OpenProjectWindow/GridContainer/Path.text == "":
+	if $OpenProjectWindow/GridContainer/Path3D.text == "":
 		$OpenProjectWindow/VBoxContainer/Warning2.show()
 	else:
 		$OpenProjectWindow/VBoxContainer/Warning2.hide()
-		add_project($OpenProjectWindow/GridContainer/ProjectName.text, $OpenProjectWindow/GridContainer/Path.text)
+		add_project($OpenProjectWindow/GridContainer/ProjectName.text, $OpenProjectWindow/GridContainer/Path3D.text)
 		$OpenProjectWindow.hide()
 
 
@@ -141,7 +142,7 @@ func _on_ItemList_item_selected(index: int) -> void:
 
 func _on_ItemList_nothing_selected() -> void:
 	$HSplitContainer/ColorRect/VBoxContainer/DeleteProjectButton.disabled = true
-	$HSplitContainer/Panel/ItemList.unselect_all()
+	$HSplitContainer/Panel/ItemList.deselect_all()
 
 
 func _on_DeleteProjectButton_pressed() -> void:
@@ -159,7 +160,4 @@ func _on_DeleteConfirmationDialog_confirmed() -> void:
 
 # Open up a project, open code editor
 func _on_ItemList_item_activated(index: int) -> void:
-	emit_signal("change_scene", projects_list[project_selected]["project_name"], projects_list[project_selected]["path"])
-
-
-
+	emit_signal("change_scene_to_file", projects_list[project_selected]["project_name"], projects_list[project_selected]["path"])

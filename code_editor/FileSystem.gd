@@ -2,7 +2,7 @@ extends Tree
 
 var root
 
-onready var tab_container = $"../VSplitContainer/TabContainer"
+@onready var tab_container = $"../VSplitContainer/TabContainer"
 
 var project_path = Global.project_path
 
@@ -14,7 +14,7 @@ func _ready() -> void:
 func recursive_path(path, parent):
 	var dir = open_dir(path)
 	
-	dir.list_dir_begin(true, true)
+	dir.list_dir_begin() # TODOConverter3To4 fill missing arguments https://github.com/godotengine/godot/pull/40547
 	var file_name = dir.get_next()
 	
 	while file_name != "":
@@ -72,8 +72,8 @@ func update_dir(folder_path):
 
 
 func open_dir(path):
-	var dir = Directory.new()
-	if dir.open(path) != OK:
+	var dir = DirAccess.open(path)
+	if dir == null:
 		print("Error opening directory")
 		return null
 
@@ -82,8 +82,7 @@ func open_dir(path):
 
 
 func _on_FileDialog_file_selected(path: String) -> void:
-	var f = File.new()
-	f.open(path, 2)
+	var f = FileAccess.open(path, FileAccess.WRITE)
 	f.store_string(tab_container.get_children()[tab_container.current_tab].text)
 	tab_container.get_child(tab_container.current_tab).name = path.get_file().get_basename()
 	f.close()
