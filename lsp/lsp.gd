@@ -39,7 +39,7 @@ func send_json(data):
 	
 
 func send_completion_request(current_doc_path: String, position: Vector2):
-	print("Calling for completion")
+
 	var request = {
 	"jsonrpc": "2.0",
 	"id": 3,
