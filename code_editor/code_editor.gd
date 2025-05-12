@@ -27,10 +27,10 @@ func _ready() -> void:
 	$MenuButton.get_popup().add_item("Quit")
 	$MenuButton.get_popup().connect("id_pressed", Callable(self, "_on_item_pressed"))
 
-	$MenuButton.get_popup().set_item_shortcut(0, set_shortcut(KEY_N))
-	$MenuButton.get_popup().set_item_shortcut(1, set_shortcut(KEY_E))
-	$MenuButton.get_popup().set_item_shortcut(3, set_shortcut(KEY_S))
-	$MenuButton.get_popup().set_item_shortcut(5, set_shortcut(KEY_Q))
+	# $MenuButton.get_popup().set_item_shortcut(0, set_shortcut(KEY_N))
+	# $MenuButton.get_popup().set_item_shortcut(1, set_shortcut(KEY_E))
+	# $MenuButton.get_popup().set_item_shortcut(3, set_shortcut(KEY_S))
+	# $MenuButton.get_popup().set_item_shortcut(5, set_shortcut(KEY_Q))
 	
 	$HelpMenu.get_popup().add_item("Love2D Website")
 	$HelpMenu.get_popup().add_item("Love2D API")
@@ -41,14 +41,14 @@ func _ready() -> void:
 	#LSP setup
 	lsp.send_initialize_request(project_path)
 
-
-func set_shortcut(key):
-	var shortcut = Shortcut.new()
-	var inputeventkey = InputEventKey.new()
-	inputeventkey.set_keycode(key)
-	inputeventkey.control = true
-	shortcut.set_shortcut(inputeventkey)
-	return shortcut
+#TODO: study the docs to implement this in 4.4
+# func set_shortcut(key):
+# 	var shortcut = Shortcut.new()
+# 	var inputeventkey = InputEventKey.new()
+# 	inputeventkey.set_keycode(key)
+# 	inputeventkey.control = true
+# 	shortcut.set_shortcut(inputeventkey)
+# 	return shortcut
 	
 
 func _process(delta: float) -> void:

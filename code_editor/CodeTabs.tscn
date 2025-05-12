@@ -1,23 +1,22 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://dya2rj1kathug"]
 
-[ext_resource path="res://code_editor/CodeEdit.tscn" type="PackedScene" id=2]
+[ext_resource type="PackedScene" uid="uid://ccx06htpjl8wk" path="res://code_editor/CodeEdit.tscn" id="2"]
 
 [node name="Untitled" type="TabBar"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 32.0
 offset_right = -4.0
 offset_bottom = -4.0
-tab_alignment = 0
 tab_close_display_policy = 2
 drag_to_rearrange_enabled = true
 
-[node name="CodeEdit" parent="." instance=ExtResource( 2 )]
+[node name="CodeEdit" parent="." instance=ExtResource("2")]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 0.0
 offset_right = 0.0
 offset_bottom = 0.0
-
-[connection signal="request_completion" from="CodeEdit" to="CodeEdit" method="_on_CodeEdit_request_completion"]

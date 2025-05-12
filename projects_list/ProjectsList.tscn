@@ -1,37 +1,55 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=7 format=3 uid="uid://ddpmy1gfy3eev"]
 
-[ext_resource path="res://theme/love2d/love2d.tres" type="Theme" id=1]
-[ext_resource path="res://projects_list/ProjectsList.gd" type="Script" id=2]
-[ext_resource path="res://love_icon.png" type="Texture2D" id=3]
-[ext_resource path="res://theme/love2d/CartographCF-ExtraBoldItalic.otf" type="FontFile" id=4]
-[ext_resource path="res://LÖVE_logo.png" type="Texture2D" id=5]
+[ext_resource type="Theme" uid="uid://cyiq176rr63fi" path="res://theme/love2d/love2d.tres" id="1"]
+[ext_resource type="Script" uid="uid://c1m0asvkc41mm" path="res://projects_list/ProjectsList.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://c8ukfti6bpou" path="res://love_icon.png" id="3"]
+[ext_resource type="FontFile" uid="uid://csky0ewvned0x" path="res://theme/love2d/CartographCF-ExtraBoldItalic.otf" id="4"]
+[ext_resource type="Texture2D" uid="uid://cuby1d8xs06br" path="res://LÖVE_logo.png" id="5"]
 
-[sub_resource type="FontFile" id=1]
-size = 30
-font_data = ExtResource( 4 )
+[sub_resource type="FontFile" id="1"]
+fallbacks = Array[Font]([ExtResource("4"), ExtResource("4")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
 
 [node name="ProjectsList" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 1 )
-script = ExtResource( 2 )
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1")
+script = ExtResource("2")
 
 [node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 0.156863, 0.152941, 0.164706, 1 )
+color = Color(0.156863, 0.152941, 0.164706, 1)
 
 [node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="ColorRect" type="ColorRect" parent="HSplitContainer"]
-offset_right = 200.0
-offset_bottom = 600.0
-custom_minimum_size = Vector2( 200, 0 )
-color = Color( 0.156863, 0.152941, 0.164706, 1 )
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+color = Color(0.156863, 0.152941, 0.164706, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/ColorRect"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 21.0
@@ -39,89 +57,68 @@ offset_top = 207.0
 offset_right = -18.0
 theme_override_constants/separation = 20
 
+[node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/ColorRect/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="LoveIcon" type="TextureRect" parent="HSplitContainer/ColorRect/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+texture = ExtResource("3")
+expand_mode = 1
+
+[node name="LoveLogo" type="TextureRect" parent="HSplitContainer/ColorRect/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+texture = ExtResource("5")
+expand_mode = 1
+
 [node name="NewProjectButton" type="Button" parent="HSplitContainer/ColorRect/VBoxContainer"]
-offset_right = 161.0
-offset_bottom = 50.0
-custom_minimum_size = Vector2( 0, 50 )
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
 text = "New Project"
 
 [node name="OpenProjectButton" type="Button" parent="HSplitContainer/ColorRect/VBoxContainer"]
-offset_top = 70.0
-offset_right = 161.0
-offset_bottom = 120.0
-custom_minimum_size = Vector2( 0, 50 )
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
 text = "Import Project"
 
 [node name="DeleteProjectButton" type="Button" parent="HSplitContainer/ColorRect/VBoxContainer"]
-offset_top = 140.0
-offset_right = 161.0
-offset_bottom = 190.0
-custom_minimum_size = Vector2( 0, 50 )
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
 disabled = true
 text = "Delete Project"
 
-[node name="LoveIcon" type="TextureRect" parent="HSplitContainer/ColorRect"]
-offset_left = 19.0
-offset_top = 22.0
-offset_right = 64.0
-offset_bottom = 67.0
-texture = ExtResource( 3 )
-expand = true
-
-[node name="LoveLogo" type="TextureRect" parent="HSplitContainer/ColorRect"]
-offset_left = 76.0
-offset_top = 23.0
-offset_right = 186.0
-offset_bottom = 62.0
-texture = ExtResource( 5 )
-expand = true
-
 [node name="Panel" type="ColorRect" parent="HSplitContainer"]
-offset_left = 212.0
-offset_right = 1024.0
-offset_bottom = 600.0
-color = Color( 0.156863, 0.152941, 0.164706, 1 )
+layout_mode = 2
+color = Color(0.156863, 0.152941, 0.164706, 1)
 
 [node name="ItemList" type="ItemList" parent="HSplitContainer/Panel"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 86.0
 max_text_lines = 2
-fixed_icon_size = Vector2( 50, 50 )
+fixed_icon_size = Vector2i(50, 50)
 
 [node name="Label" type="Label" parent="HSplitContainer/Panel"]
+layout_mode = 0
 anchor_right = 1.0
 offset_left = 39.0
 offset_top = 16.0
 offset_bottom = 64.0
-theme_override_fonts/font = SubResource( 1 )
+theme_override_fonts/font = SubResource("1")
 text = "Projects"
 
 [node name="NewProjectDialog" type="FileDialog" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -277.5
-offset_top = -163.0
-offset_right = 277.5
-offset_bottom = 163.0
-window_title = "Open a DirAccess"
 mode = 2
 access = 2
 
 [node name="AcceptDialog" type="Window" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -196.0
-offset_top = -90.0
-offset_right = 258.0
-offset_bottom = 134.0
-window_title = "Create new project"
+visible = false
 
 [node name="GridContainer" type="GridContainer" parent="AcceptDialog"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 46.0
@@ -131,79 +128,59 @@ offset_bottom = -38.0
 columns = 2
 
 [node name="ProjectLabel" type="Label" parent="AcceptDialog/GridContainer"]
-offset_top = 5.0
-offset_right = 150.0
-offset_bottom = 27.0
-custom_minimum_size = Vector2( 150, 0 )
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
 text = "Project Name:"
-align = 2
+horizontal_alignment = 2
 
 [node name="ProjectName" type="LineEdit" parent="AcceptDialog/GridContainer"]
-offset_left = 154.0
-offset_right = 354.0
-offset_bottom = 32.0
-custom_minimum_size = Vector2( 200, 0 )
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
 text = "Untitled"
 
 [node name="PathLabel" type="Label" parent="AcceptDialog/GridContainer"]
-offset_top = 41.0
-offset_right = 150.0
-offset_bottom = 63.0
+layout_mode = 2
 text = "Project Path3D:"
-align = 2
+horizontal_alignment = 2
 
 [node name="Path3D" type="LineEdit" parent="AcceptDialog/GridContainer"]
-offset_left = 154.0
-offset_top = 36.0
-offset_right = 354.0
-offset_bottom = 68.0
+layout_mode = 2
 editable = false
 
 [node name="Label" type="Label" parent="AcceptDialog/GridContainer"]
-offset_top = 75.0
-offset_right = 150.0
-offset_bottom = 97.0
+layout_mode = 2
 
 [node name="ChoosePathButton" type="Button" parent="AcceptDialog/GridContainer"]
-offset_left = 154.0
-offset_top = 72.0
-offset_right = 354.0
-offset_bottom = 100.0
+layout_mode = 2
 text = "Choose path"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="AcceptDialog"]
+anchors_preset = -1
 anchor_left = 0.0204082
 anchor_top = 0.524862
 anchor_right = 0.997449
 anchor_bottom = 0.994475
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="Warning1" type="Label" parent="AcceptDialog/VBoxContainer"]
 visible = false
-offset_right = 443.0
-offset_bottom = 22.0
-theme_override_colors/font_color = Color( 1, 0.219608, 0.219608, 1 )
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.219608, 0.219608, 1)
 text = "*Project name cannot be blanked"
 
 [node name="Warning2" type="Label" parent="AcceptDialog/VBoxContainer"]
 visible = false
-offset_top = 26.0
-offset_right = 443.0
-offset_bottom = 48.0
-theme_override_colors/font_color = Color( 1, 0.219608, 0.219608, 1 )
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.219608, 0.219608, 1)
 text = "*Project path is invalid"
 
 [node name="Warning3" type="Label" parent="AcceptDialog/VBoxContainer"]
 visible = false
-offset_top = 52.0
-offset_right = 443.0
-offset_bottom = 74.0
-theme_override_colors/font_color = Color( 1, 0.219608, 0.219608, 1 )
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.219608, 0.219608, 1)
 text = "*Project folder is not a blank folder"
 
 [node name="CreateProjectButton" type="Button" parent="AcceptDialog"]
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -215,17 +192,10 @@ offset_bottom = -12.0
 text = "Create Project"
 
 [node name="OpenProjectWindow" type="Window" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -196.0
-offset_top = -90.0
-offset_right = 258.0
-offset_bottom = 134.0
-window_title = "Open Existing Project"
+visible = false
 
 [node name="GridContainer" type="GridContainer" parent="OpenProjectWindow"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 46.0
@@ -235,77 +205,58 @@ offset_bottom = -38.0
 columns = 2
 
 [node name="ProjectLabel" type="Label" parent="OpenProjectWindow/GridContainer"]
-offset_top = 5.0
-offset_right = 150.0
-offset_bottom = 27.0
-custom_minimum_size = Vector2( 150, 0 )
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
 text = "Project Name:"
-align = 2
+horizontal_alignment = 2
 
 [node name="ProjectName" type="LineEdit" parent="OpenProjectWindow/GridContainer"]
-offset_left = 154.0
-offset_right = 354.0
-offset_bottom = 32.0
-custom_minimum_size = Vector2( 200, 0 )
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
 text = "Untitled"
 
 [node name="PathLabel" type="Label" parent="OpenProjectWindow/GridContainer"]
-offset_top = 41.0
-offset_right = 150.0
-offset_bottom = 63.0
+layout_mode = 2
 text = "Project Path3D:"
-align = 2
+horizontal_alignment = 2
 
 [node name="Path3D" type="LineEdit" parent="OpenProjectWindow/GridContainer"]
-offset_left = 154.0
-offset_top = 36.0
-offset_right = 354.0
-offset_bottom = 68.0
+layout_mode = 2
 editable = false
 
 [node name="Label" type="Label" parent="OpenProjectWindow/GridContainer"]
-offset_top = 75.0
-offset_right = 150.0
-offset_bottom = 97.0
+layout_mode = 2
 
 [node name="ChoosePathButton" type="Button" parent="OpenProjectWindow/GridContainer"]
-offset_left = 154.0
-offset_top = 72.0
-offset_right = 354.0
-offset_bottom = 100.0
+layout_mode = 2
 text = "Choose path"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="OpenProjectWindow"]
+anchors_preset = -1
 anchor_left = 0.0204082
 anchor_top = 0.524862
 anchor_right = 0.997449
 anchor_bottom = 0.994475
-__meta__ = {
-"_edit_use_anchors_": true
-}
 
 [node name="Warning1" type="Label" parent="OpenProjectWindow/VBoxContainer"]
 visible = false
-offset_right = 443.0
-offset_bottom = 22.0
-theme_override_colors/font_color = Color( 1, 0.219608, 0.219608, 1 )
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.219608, 0.219608, 1)
 text = "*Project name cannot be blanked"
 
 [node name="Warning2" type="Label" parent="OpenProjectWindow/VBoxContainer"]
 visible = false
-offset_top = 26.0
-offset_right = 443.0
-offset_bottom = 48.0
-theme_override_colors/font_color = Color( 1, 0.219608, 0.219608, 1 )
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.219608, 0.219608, 1)
 text = "*Project path is invalid"
 
 [node name="Warning3" type="Label" parent="OpenProjectWindow/VBoxContainer"]
-offset_right = 443.0
-offset_bottom = 22.0
-theme_override_colors/font_color = Color( 1, 0.219608, 0.219608, 1 )
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.219608, 0.219608, 1)
 text = "*Please choose main.lua file"
 
 [node name="OpenProjectButton" type="Button" parent="OpenProjectWindow"]
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -317,36 +268,16 @@ offset_bottom = -17.0
 text = "Open Project"
 
 [node name="OpenProjectDialog" type="FileDialog" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -277.5
-offset_top = -163.0
-offset_right = 277.5
-offset_bottom = 163.0
-window_title = "Open a File"
-mode = 0
 access = 2
-filters = PackedStringArray( "main.lua" )
+filters = PackedStringArray("main.lua")
 
 [node name="DeleteConfirmationDialog" type="ConfirmationDialog" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -160.5
-offset_top = -80.0
-offset_right = 160.5
-offset_bottom = 80.0
-window_title = "Delete Project"
 
 [connection signal="pressed" from="HSplitContainer/ColorRect/VBoxContainer/NewProjectButton" to="." method="_on_NewProjectButton_pressed"]
 [connection signal="pressed" from="HSplitContainer/ColorRect/VBoxContainer/OpenProjectButton" to="." method="_on_OpenProjectButton_pressed"]
 [connection signal="pressed" from="HSplitContainer/ColorRect/VBoxContainer/DeleteProjectButton" to="." method="_on_DeleteProjectButton_pressed"]
 [connection signal="item_activated" from="HSplitContainer/Panel/ItemList" to="." method="_on_ItemList_item_activated"]
 [connection signal="item_selected" from="HSplitContainer/Panel/ItemList" to="." method="_on_ItemList_item_selected"]
-[connection signal="nothing_selected" from="HSplitContainer/Panel/ItemList" to="." method="_on_ItemList_nothing_selected"]
 [connection signal="dir_selected" from="NewProjectDialog" to="." method="_on_NewProjectDialog_dir_selected"]
 [connection signal="pressed" from="AcceptDialog/GridContainer/ChoosePathButton" to="." method="_on_ChoosePathButton_pressed"]
 [connection signal="pressed" from="AcceptDialog/CreateProjectButton" to="." method="_on_CreateProjectButton_pressed"]

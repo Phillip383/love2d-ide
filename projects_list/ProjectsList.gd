@@ -35,7 +35,7 @@ func load_data():
 	if dir != null:
 		for i in range(projects_list.size(), 0, -1):
 			if not dir.dir_exists(projects_list[i-1]["path"]):
-				projects_list.remove(i-1)
+				projects_list.remove_at(i-1)
 	
 	save_data()
 	
@@ -151,7 +151,7 @@ func _on_DeleteProjectButton_pressed() -> void:
 	
 
 func _on_DeleteConfirmationDialog_confirmed() -> void:
-	projects_list.remove(project_selected)
+	projects_list.erase(project_selected)
 	save_data()
 	$HSplitContainer/Panel/ItemList.clear()
 	load_data()

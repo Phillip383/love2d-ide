@@ -1,22 +1,17 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://ccx06htpjl8wk"]
 
-[ext_resource path="res://code_editor/CodeEdit.gd" type="Script" id=1]
+[ext_resource type="Script" uid="uid://cnmko4h0qta32" path="res://code_editor/CodeEdit.gd" id="1"]
 
 [node name="CodeEdit" type="TextEdit"]
 offset_left = 208.0
 offset_right = 1024.0
 offset_bottom = 543.0
-highlight_current_line = true
-syntax_highlighter = true
-show_line_numbers = true
-draw_tabs = true
-breakpoint_gutter = true
-fold_gutter = true
-highlight_all_occurrences = true
-smooth_scrolling = true
 minimap_draw = true
 minimap_width = 120
 caret_blink = true
-script = ExtResource( 1 )
+highlight_all_occurrences = true
+highlight_current_line = true
+draw_tabs = true
+script = ExtResource("1")
 
 [connection signal="text_changed" from="." to="." method="_on_CodeEdit_text_changed"]

@@ -1,141 +1,18 @@
 [gd_scene load_steps=3 format=3 uid="uid://bpt6iertqchgw"]
 
 [ext_resource type="Script" uid="uid://b7s7e263odc8b" path="res://LoveIDE.gd" id="1"]
-[ext_resource type="PackedScene" path="res://projects_list/ProjectsList.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://ddpmy1gfy3eev" path="res://projects_list/ProjectsList.tscn" id="2"]
 
 [node name="LoveIDE" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1")
 
 [node name="ProjectsList" parent="." instance=ExtResource("2")]
-anchors_preset = 0
-
-[node name="ColorRect" parent="ProjectsList" index="0"]
-layout_mode = 0
-
-[node name="HSplitContainer" parent="ProjectsList" index="1"]
-layout_mode = 0
-
-[node name="ColorRect" parent="ProjectsList/HSplitContainer" index="0"]
-layout_mode = 2
-
-[node name="VBoxContainer" parent="ProjectsList/HSplitContainer/ColorRect" index="0"]
-layout_mode = 0
-
-[node name="NewProjectButton" parent="ProjectsList/HSplitContainer/ColorRect/VBoxContainer" index="0"]
-layout_mode = 2
-
-[node name="OpenProjectButton" parent="ProjectsList/HSplitContainer/ColorRect/VBoxContainer" index="1"]
-layout_mode = 2
-
-[node name="DeleteProjectButton" parent="ProjectsList/HSplitContainer/ColorRect/VBoxContainer" index="2"]
-layout_mode = 2
-
-[node name="LoveIcon" parent="ProjectsList/HSplitContainer/ColorRect" index="1"]
-layout_mode = 0
-expand_mode = 1
-
-[node name="LoveLogo" parent="ProjectsList/HSplitContainer/ColorRect" index="2"]
-layout_mode = 0
-expand_mode = 1
-
-[node name="Panel" parent="ProjectsList/HSplitContainer" index="1"]
-layout_mode = 2
-
-[node name="ItemList" parent="ProjectsList/HSplitContainer/Panel" index="0"]
-layout_mode = 0
-fixed_icon_size = Vector2i(50, 50)
-
-[node name="Label" parent="ProjectsList/HSplitContainer/Panel" index="1"]
-layout_mode = 0
-
-[node name="AcceptDialog" parent="ProjectsList" index="3"]
-position = Vector2i(0, 36)
-visible = false
-
-[node name="GridContainer" parent="ProjectsList/AcceptDialog" index="0"]
-anchors_preset = 15
-
-[node name="ProjectLabel" parent="ProjectsList/AcceptDialog/GridContainer" index="0"]
-layout_mode = 2
-horizontal_alignment = 2
-
-[node name="ProjectName" parent="ProjectsList/AcceptDialog/GridContainer" index="1"]
-layout_mode = 2
-
-[node name="PathLabel" parent="ProjectsList/AcceptDialog/GridContainer" index="2"]
-layout_mode = 2
-horizontal_alignment = 2
-
-[node name="Path3D" parent="ProjectsList/AcceptDialog/GridContainer" index="3"]
-layout_mode = 2
-
-[node name="Label" parent="ProjectsList/AcceptDialog/GridContainer" index="4"]
-layout_mode = 2
-
-[node name="ChoosePathButton" parent="ProjectsList/AcceptDialog/GridContainer" index="5"]
-layout_mode = 2
-
-[node name="VBoxContainer" parent="ProjectsList/AcceptDialog" index="1"]
-anchors_preset = -1
-
-[node name="Warning1" parent="ProjectsList/AcceptDialog/VBoxContainer" index="0"]
-layout_mode = 2
-
-[node name="Warning2" parent="ProjectsList/AcceptDialog/VBoxContainer" index="1"]
-layout_mode = 2
-
-[node name="Warning3" parent="ProjectsList/AcceptDialog/VBoxContainer" index="2"]
-layout_mode = 2
-
-[node name="CreateProjectButton" parent="ProjectsList/AcceptDialog" index="2"]
-anchors_preset = 7
-
-[node name="OpenProjectWindow" parent="ProjectsList" index="4"]
-position = Vector2i(0, 36)
-visible = false
-
-[node name="GridContainer" parent="ProjectsList/OpenProjectWindow" index="0"]
-anchors_preset = 15
-
-[node name="ProjectLabel" parent="ProjectsList/OpenProjectWindow/GridContainer" index="0"]
-layout_mode = 2
-horizontal_alignment = 2
-
-[node name="ProjectName" parent="ProjectsList/OpenProjectWindow/GridContainer" index="1"]
-layout_mode = 2
-
-[node name="PathLabel" parent="ProjectsList/OpenProjectWindow/GridContainer" index="2"]
-layout_mode = 2
-horizontal_alignment = 2
-
-[node name="Path3D" parent="ProjectsList/OpenProjectWindow/GridContainer" index="3"]
-layout_mode = 2
-
-[node name="Label" parent="ProjectsList/OpenProjectWindow/GridContainer" index="4"]
-layout_mode = 2
-
-[node name="ChoosePathButton" parent="ProjectsList/OpenProjectWindow/GridContainer" index="5"]
-layout_mode = 2
-
-[node name="VBoxContainer" parent="ProjectsList/OpenProjectWindow" index="1"]
-anchors_preset = -1
-
-[node name="Warning1" parent="ProjectsList/OpenProjectWindow/VBoxContainer" index="0"]
-layout_mode = 2
-
-[node name="Warning2" parent="ProjectsList/OpenProjectWindow/VBoxContainer" index="1"]
-layout_mode = 2
-
-[node name="Warning3" parent="ProjectsList/OpenProjectWindow/VBoxContainer" index="2"]
-layout_mode = 2
-
-[node name="OpenProjectButton" parent="ProjectsList/OpenProjectWindow" index="2"]
-anchors_preset = 7
+layout_mode = 1
 
 [connection signal="change_scene_to_file" from="ProjectsList" to="." method="_on_ProjectsList_change_scene"]
-
-[editable path="ProjectsList"]
