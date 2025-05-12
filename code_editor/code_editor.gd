@@ -148,17 +148,18 @@ func _on_tab_closed(tab):
 
 
 func _on_TabContainer_tab_selected(tab: int) -> void:
-	if tab_container.get_children()[tab].get_meta("path") != null:
-		current_file_path = tab_container.get_children()[tab].get_meta("path")
-		current_file = tab_container.get_child(tab).get_meta("name")
-	else:
-		current_file = "Untitled"
+	if tab_container.get_children()[tab].has_meta("path"):
+		if tab_container.get_children()[tab].get_meta("path") != null:
+			current_file_path = tab_container.get_children()[tab].get_meta("path")
+			current_file = tab_container.get_child(tab).get_meta("name")
+		else:
+			current_file = "Untitled"
 
 
 func existing_tab(tab_path) -> int:
 	var count = 0
 	for tab in tab_container.get_children():
-		if tab.get_meta("path") == tab_path:
+		if tab.has_meta("path") and tab.get_meta("path") == tab_path:
 			return count
 		count += 1
 	
@@ -166,7 +167,9 @@ func existing_tab(tab_path) -> int:
 
 
 func _on_FileSystem_item_activated() -> void:
-	var path = file_system.get_selected().get_meta("path")
+	var path = ""
+	if file_system.get_selected().has_meta("path"):
+		path = file_system.get_selected().get_meta("path")
 	if path:
 		#FIXME: if I have write issues this could be the culprite...
 		var f = FileAccess.open(path, FileAccess.READ)
@@ -186,7 +189,9 @@ func _on_FileSystem_item_activated() -> void:
 		tab_container.get_children()[tab_container.current_tab].set_meta("path", path)
 		tab_container.get_child(tab_container.current_tab).set_meta("name", file_name)
 		tab_container.get_children()[tab_container.current_tab].text = f.get_as_text()
-		tab_container.get_child(tab_container.current_tab).connect("text_changed", Callable(self, "_on_CodeEdit_text_changed"))
+		if not tab_container.get_child(tab_container.current_tab).is_connected(
+			"text_changed", Callable(self, "_on_CodeEdit_text_changed")):
+			tab_container.get_child(tab_container.current_tab).connect("text_changed", Callable(self, "_on_CodeEdit_text_changed"))
 		current_file_path = path
 		current_file = file_name
 		f.close()

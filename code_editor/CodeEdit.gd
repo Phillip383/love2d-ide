@@ -137,7 +137,8 @@ func _on_CodeEdit_request_completion() -> void:
 
 func _on_CodeEdit_text_changed() -> void:
 #	add_pairs()
-	pass
+	print("Text Changed")
+
 	
 	
 func add_pairs():
