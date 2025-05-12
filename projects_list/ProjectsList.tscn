@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://cyiq176rr63fi" path="res://theme/love2d/love2d.tres" id="1"]
 [ext_resource type="Script" uid="uid://c1m0asvkc41mm" path="res://projects_list/ProjectsList.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://c8ukfti6bpou" path="res://love_icon.png" id="3"]
-[ext_resource type="FontFile" uid="uid://csky0ewvned0x" path="res://theme/love2d/CartographCF-ExtraBoldItalic.otf" id="4"]
+[ext_resource type="FontFile" uid="uid://b10syb7m8rlp6" path="res://theme/love2d/CartographCF-ExtraBoldItalic.otf" id="4"]
 [ext_resource type="Texture2D" uid="uid://cuby1d8xs06br" path="res://LÖVE_logo.png" id="5"]
 
 [sub_resource type="FontFile" id="1"]
@@ -49,7 +49,8 @@ layout_mode = 2
 color = Color(0.156863, 0.152941, 0.164706, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/ColorRect"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 21.0
@@ -111,20 +112,27 @@ theme_override_fonts/font = SubResource("1")
 text = "Projects"
 
 [node name="NewProjectDialog" type="FileDialog" parent="."]
-mode = 2
+mode = 1
+initial_position = 1
 access = 2
 
 [node name="AcceptDialog" type="Window" parent="."]
+initial_position = 1
+size = Vector2i(600, 200)
 visible = false
 
 [node name="GridContainer" type="GridContainer" parent="AcceptDialog"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 46.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -38.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -177.0
+offset_top = -67.0
+offset_right = 177.0
+offset_bottom = 31.0
+grow_horizontal = 2
+grow_vertical = 2
 columns = 2
 
 [node name="ProjectLabel" type="Label" parent="AcceptDialog/GridContainer"]
@@ -192,6 +200,8 @@ offset_bottom = -12.0
 text = "Create Project"
 
 [node name="OpenProjectWindow" type="Window" parent="."]
+initial_position = 1
+size = Vector2i(500, 200)
 visible = false
 
 [node name="GridContainer" type="GridContainer" parent="OpenProjectWindow"]
@@ -268,10 +278,12 @@ offset_bottom = -17.0
 text = "Open Project"
 
 [node name="OpenProjectDialog" type="FileDialog" parent="."]
+initial_position = 1
 access = 2
 filters = PackedStringArray("main.lua")
 
 [node name="DeleteConfirmationDialog" type="ConfirmationDialog" parent="."]
+initial_position = 1
 
 [connection signal="pressed" from="HSplitContainer/ColorRect/VBoxContainer/NewProjectButton" to="." method="_on_NewProjectButton_pressed"]
 [connection signal="pressed" from="HSplitContainer/ColorRect/VBoxContainer/OpenProjectButton" to="." method="_on_OpenProjectButton_pressed"]
