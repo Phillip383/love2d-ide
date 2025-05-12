@@ -1,25 +1,17 @@
 extends Node
 
 var client := StreamPeerTCP.new()
-var lsp_pid = 0
+var lsp_handle = {}
 var debug_output = []
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Start the LSP
 	#TODO: change this to a path configured by the application...
-	connect_to_lsp("127.0.0.1", 8080)
-	lsp_pid = OS.execute("D:\\dev\\tooling\\lua-lsp\\bin\\lua-language-server.exe", ["--stdio", "--log=debug"], debug_output, false)
-	if lsp_pid == -1:
+	lsp_handle = OS.execute_with_pipe("D:\\dev\\tooling\\lua-lsp\\bin\\lua-language-server.exe", ["--log=debug"])
+	if lsp_handle["pid"] == -1:
 		print("LSP failed to Execute")
 	else:
-		print("LSP running pid ", lsp_pid)
-
-func connect_to_lsp(ip: String, port: int):
-	var err = client.connect_to_host(ip, port)
-	if err == OK:
-		print("Connected to Host!")
-	else:
-		print("Failed to connect:", err)
+		print("LSP running pid ", lsp_handle["pid"])
 
 func send_initialize_request(project_root: String):
 	var request = {
@@ -65,19 +57,17 @@ func send_hover_request(path_to_script: String, position: Vector2):
 }
 	send_json(request)
 
-func handle_completion_response(response):
+func handle_completion_response(_response):
 	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	if client.get_available_bytes() > 0:
-		var response = client.get_string(client.get_available_bytes())
-		print("LSP Respone:", response)
+func _process(_delta):
+	pass
 
 func _notification(what):
 	if what == NOTIFICATION_CRASH:
 		print("Killing LSP")
-		OS.kill(lsp_pid)
+		OS.kill(lsp_handle["pid"])
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		print("Killing LSP")
-		OS.kill(lsp_pid)
+		OS.kill(lsp_handle["pid"])

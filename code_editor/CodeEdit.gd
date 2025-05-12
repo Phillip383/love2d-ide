@@ -91,7 +91,7 @@ var current_line
 var last_line_length
 var last_line
 
-@onready var lsp = $LSP
+@onready var lsp = $/root/LoveIDE/CodeEditor/LSP
 @onready var code_highlighter = CodeHighlighter.new()
 
 func _ready() -> void:
@@ -167,5 +167,3 @@ func add_pairs():
 			
 	set_caret_column(cursor_pos.y)
 	deselect()
-
-
