@@ -91,6 +91,7 @@ var current_line
 var last_line_length
 var last_line
 
+onready var lsp = $LSP
 
 func _ready() -> void:
 	for i in lua_reserved_keyword:

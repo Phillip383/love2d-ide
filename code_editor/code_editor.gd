@@ -139,7 +139,9 @@ func save_file():
 
 func _on_CodeEdit_text_changed() -> void:
 	update_window_title(" (*)")
-	
+	var x = tab_container.get_child(tab_container.current_tab).cursor_get_line()
+	var y = tab_container.get_child(tab_container.current_tab).cursor_get_column()
+	lsp.send_completion_request(current_file_path, Vector2(x, y))
 
 func _on_tab_closed(tab):
 	pass

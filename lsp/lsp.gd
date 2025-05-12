@@ -38,6 +38,19 @@ func send_json(data):
 	client.put_data((json_string + "\n").to_utf8())
 	
 
+func send_completion_request(current_doc_path: String, position: Vector2):
+	print("Calling for completion")
+	var request = {
+	"jsonrpc": "2.0",
+	"id": 3,
+	"method": "textDocument/completion",
+	"params": {
+		"textDocument": { "uri": current_doc_path },
+		"position": { "line": position.x, "character": position.y }
+	}
+}
+	send_json(request)
+
 func send_hover_request(path_to_script: String, position: Vector2):
 	# TODO: change this to use the current open file and cursor position...
 	var request = {
@@ -50,6 +63,9 @@ func send_hover_request(path_to_script: String, position: Vector2):
   }
 }
 	send_json(request)
+
+func handle_completion_response(response):
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
