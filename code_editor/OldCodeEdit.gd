@@ -1,5 +1,4 @@
-extends CodeEdit
-
+extends TextEdit
 
 var lua_reserved_keyword = [
 	"print",

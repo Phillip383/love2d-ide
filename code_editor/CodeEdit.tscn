@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://ccx06htpjl8wk"]
 
-[ext_resource type="Script" uid="uid://cnmko4h0qta32" path="res://code_editor/CodeEdit.gd" id="1"]
+[ext_resource type="Script" uid="uid://cpnbpge1my1ie" path="res://code_editor/CodeEdit.gd" id="1"]
 
-[node name="CodeEdit" type="TextEdit"]
+[node name="CodeEdit" type="CodeEdit"]
 offset_left = 208.0
 offset_right = 1024.0
 offset_bottom = 543.0
