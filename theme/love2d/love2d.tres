@@ -1,8 +1,8 @@
 [gd_resource type="Theme" load_steps=6 format=3 uid="uid://cyiq176rr63fi"]
 
 [ext_resource type="FontFile" path="res://theme/aestro/RobotoCondensed.tres" id="1"]
-[ext_resource type="FontFile" uid="uid://bo83almcyistm" path="res://theme/love2d/CartographCF-Heavy.otf" id="2"]
-[ext_resource type="FontFile" uid="uid://bgva68guu2k6k" path="res://theme/aestro/RobotoMono-Medium.ttf" id="3"]
+[ext_resource type="FontFile" uid="uid://conx0gbval4we" path="res://theme/love2d/CartographCF-Heavy.otf" id="2"]
+[ext_resource type="FontFile" uid="uid://cclrvc6aacivi" path="res://theme/aestro/RobotoMono-Medium.ttf" id="3"]
 
 [sub_resource type="FontFile" id="2"]
 fallbacks = Array[Font]([ExtResource("3")])

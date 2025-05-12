@@ -151,7 +151,7 @@ func _on_DeleteProjectButton_pressed() -> void:
 	
 
 func _on_DeleteConfirmationDialog_confirmed() -> void:
-	projects_list.erase(project_selected)
+	projects_list.remove_at(project_selected)
 	save_data()
 	$HSplitContainer/Panel/ItemList.clear()
 	load_data()
