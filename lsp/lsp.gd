@@ -1,8 +1,8 @@
 extends Node
 
-var client := StreamPeerTCP.new()
 var lsp_handle = {}
-var debug_output = []
+var response_thread: Thread
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Start the LSP
@@ -13,23 +13,46 @@ func _ready():
 	else:
 		print("LSP running pid ", lsp_handle["pid"])
 
+		send_initialize_request(Global.project_path)
+
 func send_initialize_request(project_root: String):
 	var request = {
 		"jsonrpc": "2.0",
 		"id": 1,
 		"method": "initialize",
 		"params": {
-			"processId": 1234,
+			"processId": OS.get_process_id(),
 			"rootUri": project_root,
-			"capabilities": {}
+			"capabilities": {
+				"textDocument":{
+					"completionItem":{
+						"snippetSupport": true
+					}
+				}
+			}
+		},
+		"clientInfo":{
+			"name": "Love2D IDE",
+			"version": "0.2.0"
 		}
 	}
-	send_json(request)
-	
-func send_json(data):
-	var json_string = JSON.stringify(data)
-	client.put_data((json_string + "\n").to_utf8_buffer())
-	
+	var lsp_stdio = lsp_handle["stdio"]
+	# Send Request
+	var request_text = JSON.stringify(request)
+	var header = "Content-Length: %d \r\n\r\n" % [request_text.to_utf8_buffer().size()]
+	lsp_stdio.store_string(header + request_text)
+	lsp_stdio.flush()
+
+	var callable = Callable(self, "read_pipe")
+	response_thread = Thread.new()
+	var _err = response_thread.start(callable, Thread.PRIORITY_HIGH)
+
+
+# Read Response
+func read_pipe():
+	print("reading pipe")
+	var lsp_stdio = lsp_handle["stdio"]
+	print(lsp_stdio.get_line())
 
 func send_completion_request(current_doc_path: String, position: Vector2):
 
@@ -42,7 +65,6 @@ func send_completion_request(current_doc_path: String, position: Vector2):
 		"position": { "line": position.x, "character": position.y }
 	}
 }
-	send_json(request)
 
 func send_hover_request(path_to_script: String, position: Vector2):
 	# TODO: change this to use the current open file and cursor position...
@@ -55,7 +77,6 @@ func send_hover_request(path_to_script: String, position: Vector2):
 	"position": { "line": position.x, "character": position.y }
   }
 }
-	send_json(request)
 
 func handle_completion_response(_response):
 	pass

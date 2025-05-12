@@ -56,6 +56,8 @@ anchor_bottom = 1.0
 offset_left = 21.0
 offset_top = 207.0
 offset_right = -18.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 20
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/ColorRect/VBoxContainer"]
