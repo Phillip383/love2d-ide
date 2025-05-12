@@ -95,6 +95,8 @@ var last_line
 @onready var code_highlighter = CodeHighlighter.new()
 
 func _ready() -> void:
+	set_syntax_highlighter(code_highlighter)
+	
 	for i in lua_reserved_keyword:
 		code_highlighter.add_keyword_color(i, Color(0.269531, 0.589111, 1))
 		
@@ -105,7 +107,6 @@ func _ready() -> void:
 	code_highlighter.add_color_region('"', '"', Color(1, 0.942413, 0.566406))
 	code_highlighter.add_color_region("'", "'", Color(1, 0.942413, 0.566406))
 	code_highlighter.add_color_region("--", "", Color(0.347656, 0.347656, 0.347656))
-	
 	
 	current_line_length = get_line_width(get_caret_line())
 	current_line = get_caret_line()

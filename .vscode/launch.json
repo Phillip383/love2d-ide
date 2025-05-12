@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Godot Project Debug",
+            "type": "godot",
+            "request": "launch",
+            "program": "D:\\dev\\tooling\\Godot\\bin\\godot.windows.editor.dev.x86_64.mono.exe",
+            "args": ["--debug", "--path", "${workspaceFolder}\\project.godot"]
+        },
+        {
+            "name": "Godot Editor Debug",
+            "type": "godot",
+            "request": "launch",
+            "program": "D:\\dev\\tooling\\Godot\\bin\\godot.windows.editor.dev.x86_64.mono.exe",
+            "args": ["--debug", "--editor"]
+        }
+    ]
+}
