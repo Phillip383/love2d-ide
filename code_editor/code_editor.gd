@@ -171,7 +171,6 @@ func _on_FileSystem_item_activated() -> void:
 	if file_system.get_selected().has_meta("path"):
 		path = file_system.get_selected().get_meta("path")
 	if path:
-		#FIXME: if I have write issues this could be the culprite...
 		var f = FileAccess.open(path, FileAccess.READ)
 		var file_name = file_system.get_selected().get_meta("name")
 		if (tab_container.get_child_count() == 0) or (tab_container.get_children()[tab_container.current_tab].name.ends_with("(*)")):

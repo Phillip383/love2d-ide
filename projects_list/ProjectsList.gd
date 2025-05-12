@@ -30,7 +30,6 @@ func load_data():
 	projects_list = test_json_conv.get_data()
 	f.close()
 	
-	#FIXME: any issues with removing projects from the project list, this is probably the culprite.
 	var dir = DirAccess.open(PATH)
 	if dir != null:
 		for i in range(projects_list.size(), 0, -1):
