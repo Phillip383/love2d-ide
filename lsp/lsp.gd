@@ -1,13 +1,14 @@
 extends Node
 
 var lsp_handle = {}
-var response_thread: Thread
+var response_thread: Thread = Thread.new()
 
 var stdio_size: int = 0
 var current_respone: int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+
 	# Start the LSP
 	#TODO: change this to a path configured by the application...
 	lsp_handle = OS.execute_with_pipe("D:\\dev\\tooling\\lua-lsp\\bin\\lua-language-server.exe", ["--log=debug"])
@@ -41,15 +42,12 @@ func send_initialize_request(project_root: String):
 	}
 	
 	# Send Request
-	await send_request_and_await_response(request)
-
-	var callable = Callable(self, "_read_pipe")
-	response_thread = Thread.new()
-	var _err = response_thread.start(callable, Thread.PRIORITY_HIGH)
+	await _send_request_and_await_response(request)
 
 
 # Read Response
 func _read_pipe():
+	print("reading pipe")
 	var lsp_stdio :FileAccess = lsp_handle["stdio"]
 	while lsp_stdio.get_position() < lsp_stdio.get_length():
 		print("######Response######\n")
@@ -67,13 +65,25 @@ func send_completion_request(current_doc_path: String, position: Vector2):
 		"textDocument": { "uri": current_doc_path },
 		"position": { "line": position.x, "character": position.y }
 	}
+	
 }
+	await _send_request_and_await_response(request)
 
-func send_request_and_await_response(request: Dictionary):
+func _send_request_and_await_response(request: Dictionary):
 	var request_text = JSON.stringify(request)
 	var header = "Content-Length: %d \r\n\r\n" % [request_text.to_utf8_buffer().size()]
 	lsp_handle["stdio"].store_string(header + request_text)
 	await get_tree().create_timer(.5).timeout
+
+	if not response_thread.is_started():
+		var callable = Callable(self, "_read_pipe")
+		var err = response_thread.start(callable, Thread.PRIORITY_HIGH)
+		if err != OK:
+			print("Thread Failed to start: ", err)
+		else:
+			print("Response thread started.")
+	elif response_thread.is_started():
+		response_thread.wait_to_finish()
 
 
 func send_hover_request(path_to_script: String, position: Vector2):
