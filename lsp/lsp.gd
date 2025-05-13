@@ -39,12 +39,9 @@ func send_initialize_request(project_root: String):
 			"version": "0.2.0"
 		}
 	}
-	var lsp_stdio = lsp_handle["stdio"]
+	
 	# Send Request
-	var request_text = JSON.stringify(request)
-	var header = "Content-Length: %d \r\n\r\n" % [request_text.to_utf8_buffer().size()]
-	lsp_stdio.store_string(header + request_text)
-	await get_tree().create_timer(3).timeout
+	await send_request_and_await_response(request)
 
 	var callable = Callable(self, "_read_pipe")
 	response_thread = Thread.new()
@@ -71,6 +68,13 @@ func send_completion_request(current_doc_path: String, position: Vector2):
 		"position": { "line": position.x, "character": position.y }
 	}
 }
+
+func send_request_and_await_response(request: Dictionary):
+	var request_text = JSON.stringify(request)
+	var header = "Content-Length: %d \r\n\r\n" % [request_text.to_utf8_buffer().size()]
+	lsp_handle["stdio"].store_string(header + request_text)
+	await get_tree().create_timer(.5).timeout
+
 
 func send_hover_request(path_to_script: String, position: Vector2):
 	# TODO: change this to use the current open file and cursor position...
