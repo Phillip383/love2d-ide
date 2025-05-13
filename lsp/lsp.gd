@@ -3,6 +3,9 @@ extends Node
 var lsp_handle = {}
 var response_thread: Thread
 
+var stdio_size: int = 0
+var current_respone: int = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Start the LSP
@@ -41,18 +44,21 @@ func send_initialize_request(project_root: String):
 	var request_text = JSON.stringify(request)
 	var header = "Content-Length: %d \r\n\r\n" % [request_text.to_utf8_buffer().size()]
 	lsp_stdio.store_string(header + request_text)
-	lsp_stdio.flush()
+	await get_tree().create_timer(3).timeout
 
-	var callable = Callable(self, "read_pipe")
+	var callable = Callable(self, "_read_pipe")
 	response_thread = Thread.new()
 	var _err = response_thread.start(callable, Thread.PRIORITY_HIGH)
 
 
 # Read Response
-func read_pipe():
-	print("reading pipe")
-	var lsp_stdio = lsp_handle["stdio"]
-	print(lsp_stdio.get_line())
+func _read_pipe():
+	var lsp_stdio :FileAccess = lsp_handle["stdio"]
+	while lsp_stdio.get_position() < lsp_stdio.get_length():
+		print("######Response######\n")
+		var content_length = lsp_stdio.get_line().split(": ")[1].to_int() + 2
+		print(lsp_stdio.get_buffer(content_length).get_string_from_utf8())
+		lsp_stdio.seek(lsp_stdio.get_position() + content_length)
 
 func send_completion_request(current_doc_path: String, position: Vector2):
 
